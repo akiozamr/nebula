@@ -32,24 +32,31 @@ screenGui.Name = "NEBULA_HUB"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = playerGui
 
--- Main frame
+-- Main frame (transparan abu-abu)
 local mainFrame = Instance.new("Frame")
 mainFrame.Size = UDim2.new(0, 380, 0, 260)
 mainFrame.Position = UDim2.new(0.5, -190, 0.5, -130)
-mainFrame.BackgroundColor3 = Color3.fromRGB(18, 22, 38) -- dark nebula theme
+mainFrame.BackgroundColor3 = Color3.fromRGB(60,60,60)
+mainFrame.BackgroundTransparency = 0.2
 mainFrame.BorderSizePixel = 0
 mainFrame.Active = true
 mainFrame.Draggable = true
 mainFrame.Parent = screenGui
 
 local mainCorner = Instance.new("UICorner")
-mainCorner.CornerRadius = UDim.new(0, 14)
+mainCorner.CornerRadius = UDim.new(0,14)
 mainCorner.Parent = mainFrame
+
+local mainStroke = Instance.new("UIStroke")
+mainStroke.Color = Color3.fromRGB(120,120,120)
+mainStroke.Thickness = 1
+mainStroke.Parent = mainFrame
 
 -- Title bar
 local titleBar = Instance.new("Frame")
 titleBar.Size = UDim2.new(1,0,0,32)
-titleBar.BackgroundColor3 = Color3.fromRGB(15,18,30)
+titleBar.BackgroundColor3 = Color3.fromRGB(50,50,50)
+titleBar.BackgroundTransparency = 0.2
 titleBar.BorderSizePixel = 0
 titleBar.Parent = mainFrame
 
@@ -57,12 +64,17 @@ local titleCorner = Instance.new("UICorner")
 titleCorner.CornerRadius = UDim.new(0,14)
 titleCorner.Parent = titleBar
 
+local titleStroke = Instance.new("UIStroke")
+titleStroke.Color = Color3.fromRGB(120,120,120)
+titleStroke.Thickness = 1
+titleStroke.Parent = titleBar
+
 local titleText = Instance.new("TextLabel")
 titleText.Size = UDim2.new(1,-60,1,0)
 titleText.Position = UDim2.new(0,15,0,0)
 titleText.BackgroundTransparency = 1
 titleText.Text = "💫 NEBULA HUB"
-titleText.TextColor3 = Color3.fromRGB(100,220,255)
+titleText.TextColor3 = Color3.fromRGB(200,200,200)
 titleText.TextSize = 16
 titleText.Font = Enum.Font.GothamBold
 titleText.TextXAlignment = Enum.TextXAlignment.Left
@@ -72,33 +84,47 @@ titleText.Parent = titleBar
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0,26,0,26)
 closeBtn.Position = UDim2.new(1,-32,0,3)
-closeBtn.BackgroundColor3 = Color3.fromRGB(255,80,80)
+closeBtn.BackgroundColor3 = Color3.fromRGB(100,100,100)
 closeBtn.Text = "×"
 closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
 closeBtn.TextSize = 16
 closeBtn.Font = Enum.Font.GothamBold
 closeBtn.BorderSizePixel = 0
 closeBtn.Parent = titleBar
+
 local closeCorner = Instance.new("UICorner")
 closeCorner.CornerRadius = UDim.new(0,6)
 closeCorner.Parent = closeBtn
-addHoverEffect(closeBtn, Color3.fromRGB(255,80,80), Color3.fromRGB(255,100,100))
+
+local closeStroke = Instance.new("UIStroke")
+closeStroke.Color = Color3.fromRGB(150,150,150)
+closeStroke.Thickness = 1
+closeStroke.Parent = closeBtn
+
+addHoverEffect(closeBtn, Color3.fromRGB(100,100,100), Color3.fromRGB(150,150,150))
 
 -- Minimize button
 local minimizeBtn = Instance.new("TextButton")
 minimizeBtn.Size = UDim2.new(0,26,0,26)
 minimizeBtn.Position = UDim2.new(1,-64,0,3)
-minimizeBtn.BackgroundColor3 = Color3.fromRGB(255,200,50)
+minimizeBtn.BackgroundColor3 = Color3.fromRGB(100,100,100)
 minimizeBtn.Text = "−"
 minimizeBtn.TextColor3 = Color3.fromRGB(255,255,255)
 minimizeBtn.TextSize = 16
 minimizeBtn.Font = Enum.Font.GothamBold
 minimizeBtn.BorderSizePixel = 0
 minimizeBtn.Parent = titleBar
+
 local minimizeCorner = Instance.new("UICorner")
 minimizeCorner.CornerRadius = UDim.new(0,6)
 minimizeCorner.Parent = minimizeBtn
-addHoverEffect(minimizeBtn, Color3.fromRGB(255,200,50), Color3.fromRGB(255,220,70))
+
+local minimizeStroke = Instance.new("UIStroke")
+minimizeStroke.Color = Color3.fromRGB(150,150,150)
+minimizeStroke.Thickness = 1
+minimizeStroke.Parent = minimizeBtn
+
+addHoverEffect(minimizeBtn, Color3.fromRGB(100,100,100), Color3.fromRGB(150,150,150))
 
 -- Content frame
 local contentFrame = Instance.new("Frame")
@@ -119,7 +145,7 @@ local fpsLabel = Instance.new("TextLabel")
 fpsLabel.Size = UDim2.new(1,0,0,20)
 fpsLabel.BackgroundTransparency = 1
 fpsLabel.Text = "FPS: --"
-fpsLabel.TextColor3 = Color3.fromRGB(100,255,180)
+fpsLabel.TextColor3 = Color3.fromRGB(180,180,180)
 fpsLabel.TextSize = 13
 fpsLabel.Font = Enum.Font.GothamBold
 fpsLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -130,17 +156,17 @@ local statusLabel = Instance.new("TextLabel")
 statusLabel.Size = UDim2.new(1,0,0,20)
 statusLabel.BackgroundTransparency = 1
 statusLabel.Text = "Ready"
-statusLabel.TextColor3 = Color3.fromRGB(180,180,200)
+statusLabel.TextColor3 = Color3.fromRGB(180,180,180)
 statusLabel.TextSize = 12
 statusLabel.Font = Enum.Font.Gotham
 statusLabel.TextXAlignment = Enum.TextXAlignment.Left
 statusLabel.Parent = contentFrame
 
--- Function to create modern buttons
-local function createButton(text, color)
+-- Function to create buttons (abu-abu + outline)
+local function createButton(text)
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(0.92,0,0,38)
-    btn.BackgroundColor3 = color
+    btn.BackgroundColor3 = Color3.fromRGB(100,100,100)
     btn.Text = text
     btn.TextColor3 = Color3.fromRGB(255,255,255)
     btn.TextSize = 14
@@ -151,42 +177,20 @@ local function createButton(text, color)
     corner.CornerRadius = UDim.new(0,10)
     corner.Parent = btn
 
-    addHoverEffect(btn, color, Color3.fromRGB(
-        math.min(color.R*255+30,255),
-        math.min(color.G*255+30,255),
-        math.min(color.B*255+30,255)
-    ))
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.fromRGB(150,150,150)
+    stroke.Thickness = 1
+    stroke.Parent = btn
+
+    addHoverEffect(btn, Color3.fromRGB(100,100,100), Color3.fromRGB(140,140,140))
 
     btn.Parent = contentFrame
     return btn
 end
 
-local optimizeBtn = createButton("⚡ OPTIMIZE", Color3.fromRGB(50,150,250))
-local resetBtn = createButton("RESET", Color3.fromRGB(200,50,70))
-local ultraBtn = createButton("ULTRA", Color3.fromRGB(255,120,50))
-
--- Info box (semi-transparent gray overlay)
-local infoText = Instance.new("TextLabel")
-infoText.Size = UDim2.new(1,0,0,60)
-infoText.BackgroundColor3 = Color3.fromRGB(50,50,50) -- abu-abu gelap
-infoText.BackgroundTransparency = 0.6 -- transparan
-infoText.Text = "• Fixed anti-lag with no fog & bright sky\n• Ultra: Maximum FPS boost\n• Safe, no object deletion"
-infoText.TextColor3 = Color3.fromRGB(220,220,220)
-infoText.TextSize = 11
-infoText.Font = Enum.Font.Gotham
-infoText.TextXAlignment = Enum.TextXAlignment.Left
-infoText.TextYAlignment = Enum.TextYAlignment.Top
-infoText.BorderSizePixel = 0
-infoText.Parent = contentFrame
-
-local infoCorner = Instance.new("UICorner")
-infoCorner.CornerRadius = UDim.new(0,10)
-infoCorner.Parent = infoText
-
-local infoPadding = Instance.new("UIPadding")
-infoPadding.PaddingLeft = UDim.new(0,8)
-infoPadding.PaddingTop = UDim.new(0,6)
-infoPadding.Parent = infoText
+local optimizeBtn = createButton("⚡ OPTIMIZE")
+local resetBtn = createButton("RESET")
+local ultraBtn = createButton("ULTRA")
 
 -- FPS updater
 RunService.Heartbeat:Connect(function()
