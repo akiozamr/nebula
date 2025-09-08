@@ -21,34 +21,34 @@ screenGui.Parent = playerGui
 local mainFrame = Instance.new("Frame")
 mainFrame.Size = UDim2.new(0.35,0,0.45,0)
 mainFrame.Position = UDim2.new(0.325,0,0.275,0)
-mainFrame.BackgroundColor3 = Color3.fromRGB(60,60,60) -- background abu-abu penuh
+mainFrame.BackgroundColor3 = Color3.fromRGB(30,30,40)
 mainFrame.BorderSizePixel = 0
 mainFrame.Active = true
 mainFrame.Draggable = true
 mainFrame.Parent = screenGui
 
 local mainCorner = Instance.new("UICorner")
-mainCorner.CornerRadius = UDim.new(0,8)
+mainCorner.CornerRadius = UDim.new(0,12)
 mainCorner.Parent = mainFrame
 
 -- Title bar
 local titleBar = Instance.new("Frame")
-titleBar.Size = UDim2.new(1,0,0,30)
-titleBar.BackgroundColor3 = Color3.fromRGB(45,45,45)
+titleBar.Size = UDim2.new(1,0,0,35)
+titleBar.BackgroundColor3 = Color3.fromRGB(22,22,30)
 titleBar.BorderSizePixel = 0
 titleBar.Parent = mainFrame
 
 local titleCorner = Instance.new("UICorner")
-titleCorner.CornerRadius = UDim.new(0,8)
+titleCorner.CornerRadius = UDim.new(0,12)
 titleCorner.Parent = titleBar
 
 local titleText = Instance.new("TextLabel")
-titleText.Size = UDim2.new(1,-80,1,0)
-titleText.Position = UDim2.new(0,10,0,0)
+titleText.Size = UDim2.new(1,-100,1,0)
+titleText.Position = UDim2.new(0,15,0,0)
 titleText.BackgroundTransparency = 1
-titleText.Text = "💫 NEBULA HUB (BETA)"
-titleText.TextColor3 = Color3.fromRGB(100,200,255)
-titleText.TextSize = 14
+titleText.Text = "🌌 NEBULA CLIENT"
+titleText.TextColor3 = Color3.fromRGB(150,200,255)
+titleText.TextSize = 16
 titleText.Font = Enum.Font.GothamBold
 titleText.TextXAlignment = Enum.TextXAlignment.Left
 titleText.Parent = titleBar
@@ -56,36 +56,53 @@ titleText.Parent = titleBar
 -- Close & Minimize buttons
 local function createTitleButton(symbol,posX,color)
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0,25,0,25)
+    btn.Size = UDim2.new(0,30,0,30)
     btn.Position = UDim2.new(1,posX,0,2.5)
     btn.BackgroundColor3 = color
     btn.BorderSizePixel = 0
     btn.Text = symbol
     btn.TextColor3 = Color3.fromRGB(255,255,255)
-    btn.TextSize = 16
+    btn.TextSize = 18
     btn.Font = Enum.Font.GothamBold
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0,4)
+    corner.CornerRadius = UDim.new(0,6)
     corner.Parent = btn
     btn.Parent = titleBar
     return btn
 end
 
-local minimizeBtn = createTitleButton("−",-55,Color3.fromRGB(255,200,50))
-local closeBtn = createTitleButton("×",-25,Color3.fromRGB(255,80,80))
+local minimizeBtn = createTitleButton("−",-70,Color3.fromRGB(255,200,50))
+local closeBtn = createTitleButton("×",-35,Color3.fromRGB(255,80,80))
 
 -- Content frame
 local contentFrame = Instance.new("Frame")
-contentFrame.Size = UDim2.new(1,-20,1,-40)
-contentFrame.Position = UDim2.new(0,10,0,35)
-contentFrame.BackgroundColor3 = Color3.fromRGB(100,100,100) -- abu-abu terang
-contentFrame.BackgroundTransparency = 0.3
+contentFrame.Size = UDim2.new(1,-20,1,-45)
+contentFrame.Position = UDim2.new(0,10,0,40)
+contentFrame.BackgroundColor3 = Color3.fromRGB(50,50,60)
+contentFrame.BorderSizePixel = 0
 contentFrame.Parent = mainFrame
 
--- FPS & Status
+local contentCorner = Instance.new("UICorner")
+contentCorner.CornerRadius = UDim.new(0,10)
+contentCorner.Parent = contentFrame
+
+-- Info label
+local infoLabel = Instance.new("TextLabel")
+infoLabel.Size = UDim2.new(1,0,0,50)
+infoLabel.Position = UDim2.new(0,0,0,0)
+infoLabel.BackgroundTransparency = 1
+infoLabel.Text = "💡 Optimizer & Ultra Mode\nFully optimized performance with clear visuals."
+infoLabel.TextColor3 = Color3.fromRGB(200,200,200)
+infoLabel.TextSize = 13
+infoLabel.Font = Enum.Font.Gotham
+infoLabel.TextWrapped = true
+infoLabel.TextYAlignment = Enum.TextYAlignment.Top
+infoLabel.Parent = contentFrame
+
+-- FPS & status
 local fpsLabel = Instance.new("TextLabel")
-fpsLabel.Size = UDim2.new(1,0,0,20)
-fpsLabel.Position = UDim2.new(0,0,0,0)
+fpsLabel.Size = UDim2.new(0.5,0,0,20)
+fpsLabel.Position = UDim2.new(0,10,0,55)
 fpsLabel.BackgroundTransparency = 1
 fpsLabel.Text = "FPS: --"
 fpsLabel.TextColor3 = Color3.fromRGB(100,255,100)
@@ -95,55 +112,53 @@ fpsLabel.TextXAlignment = Enum.TextXAlignment.Left
 fpsLabel.Parent = contentFrame
 
 local statusLabel = Instance.new("TextLabel")
-statusLabel.Size = UDim2.new(1,0,0,20)
-statusLabel.Position = UDim2.new(0,0,0,20)
+statusLabel.Size = UDim2.new(0.5,0,0,20)
+statusLabel.Position = UDim2.new(0.5,0,0,55)
 statusLabel.BackgroundTransparency = 1
 statusLabel.Text = "Ready"
-statusLabel.TextColor3 = Color3.fromRGB(230,230,230)
+statusLabel.TextColor3 = Color3.fromRGB(200,200,200)
 statusLabel.TextSize = 12
 statusLabel.Font = Enum.Font.Gotham
-statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+statusLabel.TextXAlignment = Enum.TextXAlignment.Right
 statusLabel.Parent = contentFrame
 
--- Tombol abu-abu transparan dengan outline
-local function createButton(text,yScale)
+-- Tombol helper
+local function createButton(text, yPos)
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(0.9,0,0,40)
-    btn.Position = UDim2.new(0.05,0,0,yScale)
-    btn.BackgroundColor3 = Color3.fromRGB(128,128,128)
-    btn.BackgroundTransparency = 0.3
+    btn.Position = UDim2.new(0.05,0,0,yPos)
+    btn.BackgroundColor3 = Color3.fromRGB(120,120,130)
+    btn.BackgroundTransparency = 0.2
     btn.BorderColor3 = Color3.fromRGB(180,180,180)
     btn.BorderSizePixel = 2
     btn.Text = text
-    btn.TextColor3 = Color3.fromRGB(230,230,230)
-    btn.TextSize = 14
+    btn.TextColor3 = Color3.fromRGB(240,240,240)
+    btn.TextSize = 15
     btn.Font = Enum.Font.GothamBold
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0,5)
+    corner.CornerRadius = UDim.new(0,6)
     corner.Parent = btn
     btn.Parent = contentFrame
     return btn
 end
 
--- Tombol utama
-local optimizeBtn = createButton("⚡ OPTIMIZE", 50)
-local ultraBtn = createButton("ULTRA", 100)
-local resetBtn = createButton("RESET", 150)
+local optimizeBtn = createButton("⚡ Optimize", 90)
+local ultraBtn = createButton("🚀 Ultra Mode", 145)
+local resetBtn = createButton("🔄 Reset", 200)
 
 -- Hover effect
 local function addHover(button)
     button.MouseEnter:Connect(function()
-        TweenService:Create(button,TweenInfo.new(0.2),{BackgroundTransparency=0.1}):Play()
+        TweenService:Create(button,TweenInfo.new(0.2),{BackgroundTransparency=0.05}):Play()
     end)
     button.MouseLeave:Connect(function()
-        TweenService:Create(button,TweenInfo.new(0.2),{BackgroundTransparency=0.3}):Play()
+        TweenService:Create(button,TweenInfo.new(0.2),{BackgroundTransparency=0.2}):Play()
     end)
 end
-addHover(optimizeBtn)
-addHover(ultraBtn)
-addHover(resetBtn)
-addHover(closeBtn)
-addHover(minimizeBtn)
+
+for _,btn in pairs({optimizeBtn,ultraBtn,resetBtn,closeBtn,minimizeBtn}) do
+    addHover(btn)
+end
 
 -- FPS counter
 local fps = 0
@@ -164,42 +179,33 @@ fpsConnection = RunService.Heartbeat:Connect(function()
     end
 end)
 
--- Variabel
-local isOptimized = false
-local isUltraMode = false
-local originalSettings = {}
-local optimizedParts = {}
-local isMinimized = false
-
--- Tombol fungsi
+-- Tombol fungsi (gunakan fungsi optimizePerformance, ultraOptimize, resetSettings asli)
 optimizeBtn.MouseButton1Click:Connect(optimizePerformance)
 ultraBtn.MouseButton1Click:Connect(ultraOptimize)
 resetBtn.MouseButton1Click:Connect(resetSettings)
 
--- Minimize button
+-- Minimize
 minimizeBtn.MouseButton1Click:Connect(function()
-    if isMinimized then
+    if mainFrame.Size.Y.Scale>0.1 then
+        mainFrame:TweenSize(UDim2.new(mainFrame.Size.X.Scale,0,0.08,0),"Out","Quart",0.3,true)
+        contentFrame.Visible = false
+        minimizeBtn.Text = "+"
+    else
         mainFrame:TweenSize(UDim2.new(0.35,0,0.45,0),"Out","Quart",0.3,true)
         contentFrame.Visible = true
         minimizeBtn.Text = "−"
-        isMinimized = false
-    else
-        mainFrame:TweenSize(UDim2.new(0.35,0,0,30),"Out","Quart",0.3,true)
-        contentFrame.Visible = false
-        minimizeBtn.Text = "+"
-        isMinimized = true
     end
 end)
 
--- Close button
+-- Close
 closeBtn.MouseButton1Click:Connect(function()
     if fpsConnection then fpsConnection:Disconnect() end
     resetSettings()
-    wait(0.3)
+    wait(0.2)
     screenGui:Destroy()
 end)
 
-print("NEBULA CLIENT Optimizer GUI siap digunakan!")
+print("✅ NEBULA CLIENT GUI siap digunakan! Desain modern dan rapi.")
 
 -- Save original settings (More comprehensive)
 local function saveOriginalSettings()
