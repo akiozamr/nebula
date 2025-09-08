@@ -170,10 +170,6 @@ ultraCorner.CornerRadius = UDim.new(0, 4)
 ultraCorner.Parent = ultraBtn
 
 -- Info text
-local infoText = Instance.new("TextLabel")
-infoText.Size = UDim2.new(1, 0, 0, 90)
-infoText.Position = UDim2.new(0, 0, 0, 105)
-infoText.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
 infoText.Text = [[
 Nebula Hub | Beta Tester
 
@@ -190,22 +186,16 @@ Ultra Mode:
 - All particle effects disabled
 - Maximum FPS boost
 ]]
-infoText.TextColor3 = Color3.fromRGB(180, 180, 180)
-infoText.TextSize = 9
-infoText.Font = Enum.Font.Gotham
-infoText.TextXAlignment = Enum.TextXAlignment.Left
-infoText.TextYAlignment = Enum.TextYAlignment.Top
-infoText.BorderSizePixel = 0
-infoText.Parent = contentFrame
 
-local infoCorner = Instance.new("UICorner")
-infoCorner.CornerRadius = UDim.new(0, 4)
-infoCorner.Parent = infoText
+infoText.TextWrapped = true
+infoText.TextScaled = false
+infoText.Size = UDim2.new(1, -10, 0, 120)
+infoText.Position = UDim2.new(0, 5, 0, 105)
 
--- Add padding to info text
 local infoPadding = Instance.new("UIPadding")
-infoPadding.PaddingLeft = UDim.new(0, 5)
-infoPadding.PaddingTop = UDim.new(0, 3)
+infoPadding.PaddingLeft = UDim.new(0, 8)
+infoPadding.PaddingTop = UDim.new(0, 5)
+infoPadding.PaddingRight = UDim.new(0, 8)
 infoPadding.Parent = infoText
 
 -- Variables
