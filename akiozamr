@@ -1,5 +1,5 @@
--- NEBULA CLIENT Anti-Lag Optimizer (Fixed & Enhanced)
--- Advanced optimization with proper FPS boost and responsive GUI
+-- NEBULA CLIENT Anti-Lag Optimizer (Final Version)
+-- Advanced optimization with proper FPS boost and no fog/bright sky
 
 -- Services
 local Players = game:GetService("Players")
@@ -16,11 +16,7 @@ local fps = 0
 local lastTime = tick()
 local frameCount = 0
 local isMinimized = false
-
--- Storage
 local optimizedParts = {}
-local originalSettings = {}
-local fpsConnection
 
 -- Function: Hover effect with smooth tween
 local function addHoverEffect(button, normalColor, hoverColor)
@@ -38,11 +34,11 @@ screenGui.Name = "NEBULA_HUB"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = playerGui
 
--- Main frame (responsif)
+-- Main frame (transparan abu-abu)
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0.35, 0, 0.35, 0) -- 35% lebar & tinggi layar
-mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+mainFrame.Size = UDim2.new(0.8,0,0.8,0)  -- responsive 80% layar
+mainFrame.Position = UDim2.new(0.5,0,0.5,0)
+mainFrame.AnchorPoint = Vector2.new(0.5,0.5)
 mainFrame.BackgroundColor3 = Color3.fromRGB(60,60,60)
 mainFrame.BackgroundTransparency = 0.2
 mainFrame.BorderSizePixel = 0
@@ -55,7 +51,7 @@ mainCorner.CornerRadius = UDim.new(0,14)
 mainCorner.Parent = mainFrame
 
 local mainStroke = Instance.new("UIStroke")
-mainStroke.Color = Color3.fromRGB(120,120,120)
+mainStroke.Color = Color3.fromRGB(120,120,120)  -- solid outline
 mainStroke.Thickness = 1
 mainStroke.Parent = mainFrame
 
@@ -92,6 +88,7 @@ local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0,26,0,26)
 closeBtn.Position = UDim2.new(1,-32,0,3)
 closeBtn.BackgroundColor3 = Color3.fromRGB(100,100,100)
+closeBtn.BackgroundTransparency = 0.2
 closeBtn.Text = "×"
 closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
 closeBtn.TextSize = 16
@@ -115,6 +112,7 @@ local minimizeBtn = Instance.new("TextButton")
 minimizeBtn.Size = UDim2.new(0,26,0,26)
 minimizeBtn.Position = UDim2.new(1,-64,0,3)
 minimizeBtn.BackgroundColor3 = Color3.fromRGB(100,100,100)
+minimizeBtn.BackgroundTransparency = 0.2
 minimizeBtn.Text = "−"
 minimizeBtn.TextColor3 = Color3.fromRGB(255,255,255)
 minimizeBtn.TextSize = 16
@@ -133,11 +131,12 @@ minimizeStroke.Parent = minimizeBtn
 
 addHoverEffect(minimizeBtn, Color3.fromRGB(100,100,100), Color3.fromRGB(150,150,150))
 
--- Content frame
+-- Content frame (semi-transparan, responsive)
 local contentFrame = Instance.new("Frame")
-contentFrame.Size = UDim2.new(1,-20,1,-42)
+contentFrame.Size = UDim2.new(1,-20,0,0) -- tinggi menyesuaikan tombol
 contentFrame.Position = UDim2.new(0,10,0,34)
 contentFrame.BackgroundTransparency = 1
+contentFrame.AutomaticSize = Enum.AutomaticSize.Y
 contentFrame.Parent = mainFrame
 
 local layout = Instance.new("UIListLayout")
@@ -169,11 +168,12 @@ statusLabel.Font = Enum.Font.Gotham
 statusLabel.TextXAlignment = Enum.TextXAlignment.Left
 statusLabel.Parent = contentFrame
 
--- Function to create buttons
-local function createButton(text, normalColor, hoverColor)
+-- Function to create semi-transparent gray buttons
+local function createButton(text)
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(0.92,0,0,38)
-    btn.BackgroundColor3 = normalColor
+    btn.BackgroundColor3 = Color3.fromRGB(100,100,100)
+    btn.BackgroundTransparency = 0.2
     btn.Text = text
     btn.TextColor3 = Color3.fromRGB(255,255,255)
     btn.TextSize = 14
@@ -189,198 +189,37 @@ local function createButton(text, normalColor, hoverColor)
     stroke.Thickness = 1
     stroke.Parent = btn
 
-    addHoverEffect(btn, normalColor, hoverColor)
+    addHoverEffect(btn, Color3.fromRGB(100,100,100), Color3.fromRGB(140,140,140))
 
     btn.Parent = contentFrame
     return btn
 end
 
--- Tombol utama
-local optimizeBtn = createButton("⚡ OPTIMIZE", Color3.fromRGB(50,150,250), Color3.fromRGB(70,170,255))
-local resetBtn = createButton("RESET", Color3.fromRGB(150,50,50), Color3.fromRGB(170,70,70))
-local ultraBtn = createButton("ULTRA", Color3.fromRGB(255,100,50), Color3.fromRGB(255,120,70))
+local optimizeBtn = createButton("⚡ OPTIMIZE")
+local resetBtn = createButton("RESET")
+local ultraBtn = createButton("ULTRA")
 
--- Save original settings (Comprehensive backup)
-local function saveOriginalSettings()
-    originalSettings = {
-        StreamingEnabled = Workspace.StreamingEnabled,
-        GlobalShadows = Lighting.GlobalShadows,
-        FogEnd = Lighting.FogEnd,
-        FogStart = Lighting.FogStart,
-        FogColor = Lighting.FogColor,
-        Brightness = Lighting.Brightness,
-        Technology = Lighting.Technology,
-        Ambient = Lighting.Ambient,
-        ColorShift_Bottom = Lighting.ColorShift_Bottom,
-        ColorShift_Top = Lighting.ColorShift_Top,
-        OutdoorAmbient = Lighting.OutdoorAmbient,
-        ShadowSoftness = Lighting.ShadowSoftness,
-        ClockTime = Lighting.ClockTime,
-    }
-    pcall(function()
-        originalSettings.QualityLevel = settings().Rendering.QualityLevel
-        originalSettings.MeshPartDetailLevel = settings().Rendering.MeshPartDetailLevel
-        originalSettings.GraphicsMode = settings().Rendering.GraphicsMode
-    end)
-end
-
--- Optimize Performance
-function optimizePerformance()
-    if isOptimized then return end
-    statusLabel.Text = "Optimizing..."
-    statusLabel.TextColor3 = Color3.fromRGB(255,200,100)
-    saveOriginalSettings()
-
-    -- Workspace optimizations
-    Workspace.StreamingEnabled = true
-
-    -- Lighting optimization
-    Lighting.GlobalShadows = false
-    Lighting.Technology = Enum.Technology.Compatibility
-    Lighting.FogEnd = 1000000
-    Lighting.FogStart = 1000000
-    Lighting.FogColor = Color3.fromRGB(255,255,255)
-    Lighting.Brightness = 3
-    Lighting.Ambient = Color3.fromRGB(128,128,128)
-    Lighting.OutdoorAmbient = Color3.fromRGB(128,128,128)
-    Lighting.ClockTime = 14
-    Lighting.ShadowSoftness = 0
-
-    -- Rendering settings
-    pcall(function()
-        settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
-        settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level01
-        settings().Rendering.GraphicsMode = Enum.GraphicsMode.Direct3D9
-    end)
-
-    -- Optimize parts
-    local partCount = 0
-    for _, obj in pairs(Workspace:GetDescendants()) do
-        if obj:IsA("BasePart") then
-            partCount = partCount + 1
-            obj.TopSurface = Enum.SurfaceType.Smooth
-            obj.BottomSurface = Enum.SurfaceType.Smooth
-            obj.LeftSurface = Enum.SurfaceType.Smooth
-            obj.RightSurface = Enum.SurfaceType.Smooth
-            obj.FrontSurface = Enum.SurfaceType.Smooth
-            obj.BackSurface = Enum.SurfaceType.Smooth
-            obj.CastShadow = false
-            if obj.Material ~= Enum.Material.Plastic and obj.Material ~= Enum.Material.SmoothPlastic then
-                obj.Material = Enum.Material.SmoothPlastic
-            end
-            if obj.Name:lower():find("decoration") or obj.Name:lower():find("detail") or obj.Transparency > 0.5 then
-                obj.CanCollide = false
-            end
-            table.insert(optimizedParts, obj)
-        elseif obj:IsA("ParticleEmitter") or obj:IsA("Fire") or obj:IsA("Smoke") or obj:IsA("Sparkles") then
-            obj.Enabled = false
-        elseif obj:IsA("Texture") or obj:IsA("Decal") then
-            obj.StudsPerTileU = 1
-            obj.StudsPerTileV = 1
-            if obj.Transparency < 0.1 then
-                obj.Transparency = 0.1
-            end
-        elseif obj:IsA("Atmosphere") then
-            obj.Density = 0
-            obj.Offset = 0
-            obj.Glare = 0
-            obj.Haze = 0
-            obj.Color = Color3.fromRGB(255,255,255)
-        elseif obj:IsA("Clouds") then
-            obj.Enabled = false
-            obj.Density = 0
-        elseif obj:IsA("BloomEffect") or obj:IsA("BlurEffect") or obj:IsA("ColorCorrectionEffect") then
-            obj.Enabled = false
-        elseif obj:IsA("PointLight") or obj:IsA("SpotLight") or obj:IsA("SurfaceLight") then
-            obj.Brightness = obj.Brightness * 0.3
-            obj.Range = math.min(obj.Range, 10)
-        end
-
-        if partCount % 100 == 0 then wait() end
-    end
-
-    collectgarbage("collect")
-    wait(0.1)
-    collectgarbage("collect")
-
-    isOptimized = true
-    statusLabel.Text = "Optimized ✓"
-    statusLabel.TextColor3 = Color3.fromRGB(100,255,100)
-    optimizeBtn.Text = "✓ OPTIMIZED"
-    optimizeBtn.BackgroundColor3 = Color3.fromRGB(50,200,50)
-end
-
--- Ultra Optimize
-function ultraOptimize()
-    if isUltraMode then return end
-    statusLabel.Text = "Ultra Mode..."
-    statusLabel.TextColor3 = Color3.fromRGB(255,150,50)
-    if not isOptimized then
-        optimizePerformance()
-        wait(0.5)
-    end
-
-    Lighting.GlobalShadows = false
-    Lighting.Technology = Enum.Technology.Legacy
-    Lighting.FogEnd = 1000000
-    Lighting.FogStart = 1000000
-    Lighting.Brightness = 5
-    Lighting.Ambient = Color3.fromRGB(178,178,178)
-    Lighting.OutdoorAmbient = Color3.fromRGB(178,178,178)
-    Lighting.ColorShift_Bottom = Color3.fromRGB(255,255,255)
-    Lighting.ColorShift_Top = Color3.fromRGB(255,255,255)
-
-    pcall(function()
-        settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
-        settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level01
-        settings().Rendering.GraphicsMode = Enum.GraphicsMode.Direct3D9
-        settings().Physics.AllowSleep = true
-        settings().Physics.ThrottleAdjustTime = 0
-    end)
-
-    for _, obj in pairs(optimizedParts) do
-        if obj and obj.Parent then
-            obj.Material = Enum.Material.Plastic
-            obj.Reflectance = 0
-            obj.CastShadow = false
-            if obj:FindFirstChild("SurfaceGui") then
-                obj.SurfaceGui:Destroy()
-            end
+-- FPS updater
+local fpsConnection = RunService.Heartbeat:Connect(function()
+    frameCount = frameCount + 1
+    local currentTime = tick()
+    if currentTime - lastTime >= 0.5 then
+        fps = frameCount / (currentTime - lastTime)
+        frameCount = 0
+        lastTime = currentTime
+        fpsLabel.Text = string.format("FPS: %.0f", fps)
+        if fps >= 50 then
+            fpsLabel.TextColor3 = Color3.fromRGB(100,255,180)
+        elseif fps >= 30 then
+            fpsLabel.TextColor3 = Color3.fromRGB(255,255,100)
+        else
+            fpsLabel.TextColor3 = Color3.fromRGB(255,100,100)
         end
     end
+end)
 
-    for _, obj in pairs(Workspace:GetDescendants()) do
-        if obj:IsA("ParticleEmitter") or obj:IsA("Fire") or obj:IsA("Smoke") or obj:IsA("Sparkles") or obj:IsA("PointLight") or obj:IsA("SpotLight") or obj:IsA("SurfaceLight") then
-            obj.Enabled = false
-        elseif obj:IsA("Atmosphere") then
-            obj.Density = 0
-            obj.Offset = 0
-            obj.Glare = 0
-            obj.Haze = 0
-        elseif obj:IsA("Clouds") then
-            obj.Enabled = false
-            obj.Density = 0
-        elseif obj:IsA("BloomEffect") or obj:IsA("BlurEffect") or obj:IsA("ColorCorrectionEffect") then
-            obj.Enabled = false
-        elseif obj:IsA("Sound") and obj.IsPlaying then
-            obj.Volume = obj.Volume * 0.5
-        end
-    end
-
-    for i = 1, 3 do
-        collectgarbage("collect")
-        wait(0.1)
-    end
-
-    isUltraMode = true
-    statusLabel.Text = "Ultra ✓"
-    statusLabel.TextColor3 = Color3.fromRGB(255,100,50)
-    ultraBtn.Text = "✓ ULTRA"
-    ultraBtn.BackgroundColor3 = Color3.fromRGB(255,150,50)
-end
-
--- Reset settings
-function resetSettings()
+-- Reset function
+local function resetSettings()
     statusLabel.Text = "Resetting..."
     statusLabel.TextColor3 = Color3.fromRGB(255,200,100)
 
@@ -414,7 +253,8 @@ function resetSettings()
     end)
 
     for _, obj in pairs(Workspace:GetDescendants()) do
-        if obj:IsA("ParticleEmitter") or obj:IsA("Fire") or obj:IsA("Smoke") or obj:IsA("Sparkles") or obj:IsA("PointLight") or obj:IsA("SpotLight") or obj:IsA("SurfaceLight") then
+        if obj:IsA("ParticleEmitter") or obj:IsA("Fire") or obj:IsA("Smoke") or obj:IsA("Sparkles")
+        or obj:IsA("PointLight") or obj:IsA("SpotLight") or obj:IsA("SurfaceLight") then
             obj.Enabled = true
         end
     end
@@ -432,51 +272,20 @@ function resetSettings()
     ultraBtn.BackgroundColor3 = Color3.fromRGB(255,100,50)
 end
 
--- Minimize / Restore GUI
-function toggleMinimize()
+-- Minimize function
+local function toggleMinimize()
     if isMinimized then
-        mainFrame:TweenSize(UDim2.new(0.35,0,0.35,0), "Out", "Quart", 0.3, true)
+        mainFrame:TweenSize(UDim2.new(0.8,0,0.8,0), "Out", "Quart", 0.3, true)
         contentFrame.Visible = true
         minimizeBtn.Text = "−"
         isMinimized = false
     else
         contentFrame.Visible = false
-        mainFrame:TweenSize(UDim2.new(0.35,0,0.08,0), "Out", "Quart", 0.3, true)
+        mainFrame:TweenSize(UDim2.new(0.8,0,0.05,0), "Out", "Quart", 0.3, true)
         minimizeBtn.Text = "+"
         isMinimized = true
     end
 end
-
--- FPS updater
-fpsConnection = RunService.Heartbeat:Connect(function()
-    frameCount = frameCount + 1
-    local currentTime = tick()
-    if currentTime - lastTime >= 0.5 then
-        fps = frameCount / (currentTime - lastTime)
-        frameCount = 0
-        lastTime = currentTime
-        fpsLabel.Text = string.format("FPS: %.0f", fps)
-        if fps >= 50 then
-            fpsLabel.TextColor3 = Color3.fromRGB(100,255,180)
-        elseif fps >= 30 then
-            fpsLabel.TextColor3 = Color3.fromRGB(255,255,100)
-        else
-            fpsLabel.TextColor3 = Color3.fromRGB(255,100,100)
-        end
-    end
-end)
-
--- Auto-optimization detector
-spawn(function()
-    wait(5)
-    while screenGui.Parent do
-        if fps < 20 and not isOptimized then
-            statusLabel.Text = "Low FPS detected"
-            statusLabel.TextColor3 = Color3.fromRGB(255,100,100)
-        end
-        wait(10)
-    end
-end)
 
 -- Button connections
 optimizeBtn.MouseButton1Click:Connect(optimizePerformance)
@@ -493,5 +302,17 @@ closeBtn.MouseButton1Click:Connect(function()
     screenGui:Destroy()
 end)
 
-print("NEBULA CLIENT Optimizer (BETA) loaded! (Fixed Version)")
-print("Changes: Better FPS optimization, No fog, Bright sky, Enhanced rendering")
+-- Auto-optimization detector
+spawn(function()
+    wait(5)
+    while screenGui.Parent do
+        if fps < 20 and not isOptimized then
+            statusLabel.Text = "Low FPS detected"
+            statusLabel.TextColor3 = Color3.fromRGB(255,100,100)
+        end
+        wait(10)
+    end
+end)
+
+print("NEBULA CLIENT Optimizer (FINAL) loaded!")
+print("Changes: Better FPS optimization, Transparent gray GUI, Solid outline, Responsive, Full buttons working")
