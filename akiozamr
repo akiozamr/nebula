@@ -394,7 +394,7 @@ local function simplifyCharacter(plr, char)
     end
 end
 
--- Ultra performance mode for extreme FPS boost
+-- Super duper anti-lag mode with simple colored water
 local function ultraOptimize()
     if isUltraMode then return end
     
@@ -408,10 +408,10 @@ local function ultraOptimize()
     
     -- Ultra lighting (Maximum performance)
     Lighting.GlobalShadows = false
-    Lighting.Technology = Enum.Technology.Legacy -- Fastest rendering
-    Lighting.FogEnd = 1000000 -- No fog at all
+    Lighting.Technology = Enum.Technology.Legacy
+    Lighting.FogEnd = 1000000
     Lighting.FogStart = 1000000
-    Lighting.Brightness = 5 -- Very bright
+    Lighting.Brightness = 5
     Lighting.Ambient = Color3.fromRGB(178, 178, 178)
     Lighting.OutdoorAmbient = Color3.fromRGB(178, 178, 178)
     Lighting.ColorShift_Bottom = Color3.fromRGB(255, 255, 255)
@@ -426,30 +426,31 @@ local function ultraOptimize()
         settings().Physics.ThrottleAdjustTime = 0
     end)
     
-    -- Ultra part optimization
+    -- Optimize parts
     for _, obj in pairs(optimizedParts) do
         if obj and obj.Parent then
-            -- Convert everything to basic plastic
             obj.Material = Enum.Material.Plastic
             obj.Reflectance = 0
             obj.CastShadow = false
-            
-            -- Remove all surface details
             if obj:FindFirstChild("SurfaceGui") then
                 obj.SurfaceGui:Destroy()
             end
         end
     end
     
-    -- Disable all effects, plus wind, water, and grass
+    -- Disable unnecessary effects and adjust water
     for _, obj in pairs(Workspace:GetDescendants()) do
         if obj:IsA("ParticleEmitter") or 
            obj:IsA("Fire") or 
            obj:IsA("Smoke") or 
-           obj:IsA("Sparkles") or
-           obj:IsA("PointLight") or 
-           obj:IsA("SpotLight") or 
-           obj:IsA("SurfaceLight") then
+           obj:IsA("Sparkles") then
+            obj.Enabled = false
+        elseif obj:IsA("PointLight") or 
+               obj:IsA("SpotLight") or 
+               obj:IsA("SurfaceLight") or
+               obj:IsA("BloomEffect") or 
+               obj:IsA("BlurEffect") or 
+               obj:IsA("ColorCorrectionEffect") then
             obj.Enabled = false
         elseif obj:IsA("Atmosphere") then
             obj.Density = 0
@@ -459,24 +460,23 @@ local function ultraOptimize()
         elseif obj:IsA("Clouds") then
             obj.Enabled = false
             obj.Density = 0
-        elseif obj:IsA("BloomEffect") or obj:IsA("BlurEffect") or obj:IsA("ColorCorrectionEffect") then
-            obj.Enabled = false
-        elseif obj:IsA("Sound") and obj.IsPlaying then
-            obj.Volume = obj.Volume * 0.5
         elseif obj:IsA("Wind") then
             obj.Enabled = false
+        elseif obj:IsA("Sound") and obj.IsPlaying then
+            obj.Volume = 0
         elseif obj:IsA("Terrain") then
-            -- Minimal water effects
+            -- Non-realistic water: satu warna, agak transparan
             obj.WaterWaveSize = 0
             obj.WaterWaveSpeed = 0
             obj.WaterReflectance = 0
-            obj.WaterTransparency = 0.8 -- simple water
-            -- Remove grass
-            obj:FillBlock(Vector3.new(0,0,0), Vector3.new(1024, 512, 1024), Enum.Material.SmoothPlastic)
+            obj.WaterTransparency = 0.5
+            obj.WaterColor = Color3.fromRGB(0, 150, 255) -- biru muda sebagai contoh
+            -- Hapus rumput
+            obj:ReplaceMaterial(Enum.Material.Grass, Enum.Material.SmoothPlastic)
         end
     end
     
-    -- Multiple garbage collections
+    -- Garbage collection
     for i = 1, 3 do
         collectgarbage("collect")
         wait(0.1)
