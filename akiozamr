@@ -1,6 +1,7 @@
--- Nebula Client Anti-Lag Optimizer (Fixed & Enhanced)
+-- NEBULA CLIENT Anti-Lag Optimizer (Fixed & Enhanced)
 -- Advanced optimization with proper FPS boost and no fog/bright sky
 
+-- Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Lighting = game:GetService("Lighting")
@@ -14,7 +15,7 @@ local playerGui = player:WaitForChild("PlayerGui")
 
 -- Create main GUI (Compact Size)
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "NEBULA_CLIENT"
+screenGui.Name = "NEBULA_HUB"
 screenGui.Parent = playerGui
 screenGui.ResetOnSpawn = false
 
@@ -51,7 +52,7 @@ local titleText = Instance.new("TextLabel")
 titleText.Size = UDim2.new(1, -50, 1, 0)
 titleText.Position = UDim2.new(0, 5, 0, 0)
 titleText.BackgroundTransparency = 1
-titleText.Text = "💫 NEBULA CLIENT (BETA)"
+titleText.Text = "💫 NEBULA HUB (BETA)"
 titleText.TextColor3 = Color3.fromRGB(100, 200, 255)
 titleText.TextSize = 12
 titleText.Font = Enum.Font.GothamBold
@@ -377,6 +378,22 @@ local function optimizePerformance()
     optimizeBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
 end
 
+-- Fungsi untuk bikin player lain jadi abu-abu polos
+local function simplifyCharacter(plr, char)
+    if plr == player then return end -- biar kamu sendiri normal
+    if not char then return end
+
+    for _, obj in pairs(char:GetDescendants()) do
+        if obj:IsA("BasePart") then
+            obj.Color = Color3.fromRGB(150, 150, 150)
+            obj.Material = Enum.Material.SmoothPlastic
+            obj.CastShadow = false
+        elseif obj:IsA("Decal") or obj:IsA("Texture") then
+            obj.Transparency = 1
+        end
+    end
+end
+
 -- Ultra performance mode for extreme FPS boost
 local function ultraOptimize()
     if isUltraMode then return end
@@ -424,7 +441,7 @@ local function ultraOptimize()
         end
     end
     
-    -- Disable all effects and lighting
+    -- Disable all effects, plus wind, water, and grass
     for _, obj in pairs(Workspace:GetDescendants()) do
         if obj:IsA("ParticleEmitter") or 
            obj:IsA("Fire") or 
@@ -435,7 +452,6 @@ local function ultraOptimize()
            obj:IsA("SurfaceLight") then
             obj.Enabled = false
         elseif obj:IsA("Atmosphere") then
-            -- Completely remove atmospheric effects
             obj.Density = 0
             obj.Offset = 0
             obj.Glare = 0
@@ -447,6 +463,16 @@ local function ultraOptimize()
             obj.Enabled = false
         elseif obj:IsA("Sound") and obj.IsPlaying then
             obj.Volume = obj.Volume * 0.5
+        elseif obj:IsA("Wind") then
+            obj.Enabled = false
+        elseif obj:IsA("Terrain") then
+            -- Minimal water effects
+            obj.WaterWaveSize = 0
+            obj.WaterWaveSpeed = 0
+            obj.WaterReflectance = 0
+            obj.WaterTransparency = 0.8 -- simple water
+            -- Remove grass
+            obj:FillBlock(Vector3.new(0,0,0), Vector3.new(1024, 512, 1024), Enum.Material.SmoothPlastic)
         end
     end
     
@@ -592,5 +618,5 @@ spawn(function()
     end
 end)
 
-print("Nebula Client Anti-Lag Optimizer [ Beta ] loaded! (Fixed Version)")
+print("NEBULA CLIENT Optimizer (BETA) loaded! (Fixed Version)")
 print("Changes: Better FPS optimization, No fog, Bright sky, Enhanced rendering")
