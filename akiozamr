@@ -96,7 +96,7 @@ contentFrame.Parent = mainFrame
 
 -- FPS label
 local fpsLabel = Instance.new("TextLabel")
-fpsLabel.Size = UDim2.new(0.5, 0, 0, 20)
+fpsLabel.Size = UDim2.new(1, 0, 0, 20)
 fpsLabel.Position = UDim2.new(0, 0, 0, 0)
 fpsLabel.BackgroundTransparency = 1
 fpsLabel.Text = "FPS: --"
@@ -108,63 +108,42 @@ fpsLabel.Parent = contentFrame
 
 -- Status label
 local statusLabel = Instance.new("TextLabel")
-statusLabel.Size = UDim2.new(0.5, 0, 0, 20)
-statusLabel.Position = UDim2.new(0.5, 0, 0, 0)
+statusLabel.Size = UDim2.new(1, 0, 0, 20)
+statusLabel.Position = UDim2.new(0, 0, 0, 20)
 statusLabel.BackgroundTransparency = 1
 statusLabel.Text = "Ready"
 statusLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
 statusLabel.TextSize = 12
 statusLabel.Font = Enum.Font.Gotham
-statusLabel.TextXAlignment = Enum.TextXAlignment.Right
+statusLabel.TextXAlignment = Enum.TextXAlignment.Left
 statusLabel.Parent = contentFrame
 
--- Optimize button
-local optimizeBtn = Instance.new("TextButton")
-optimizeBtn.Size = UDim2.new(1, 0, 0, 40)
-optimizeBtn.Position = UDim2.new(0, 0, 0, 25)
-optimizeBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 250)
-optimizeBtn.Text = "⚡ OPTIMIZE"
-optimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-optimizeBtn.TextSize = 14
-optimizeBtn.Font = Enum.Font.GothamBold
-optimizeBtn.BorderSizePixel = 0
-optimizeBtn.Parent = contentFrame
+-- Fungsi bantu buat tombol transparan abu dengan outline abu
+local function createButton(text, yPos)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, 0, 0, 35)
+    btn.Position = UDim2.new(0, 0, 0, yPos)
+    btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50) -- abu gelap
+    btn.BackgroundTransparency = 0.6 -- transparan tipis
+    btn.BorderColor3 = Color3.fromRGB(150, 150, 150) -- outline abu
+    btn.BorderSizePixel = 2
+    btn.Text = text
+    btn.TextColor3 = Color3.fromRGB(220, 220, 220)
+    btn.TextSize = 14
+    btn.Font = Enum.Font.GothamBold
 
-local optimizeCorner = Instance.new("UICorner")
-optimizeCorner.CornerRadius = UDim.new(0, 5)
-optimizeCorner.Parent = optimizeBtn
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 5)
+    corner.Parent = btn
 
--- Reset button
-local resetBtn = Instance.new("TextButton")
-resetBtn.Size = UDim2.new(0.48, 0, 0, 25)
-resetBtn.Position = UDim2.new(0, 0, 0, 75)
-resetBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
-resetBtn.Text = "RESET"
-resetBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-resetBtn.TextSize = 11
-resetBtn.Font = Enum.Font.Gotham
-resetBtn.BorderSizePixel = 0
-resetBtn.Parent = contentFrame
+    btn.Parent = contentFrame
+    return btn
+end
 
-local resetCorner = Instance.new("UICorner")
-resetCorner.CornerRadius = UDim.new(0, 4)
-resetCorner.Parent = resetBtn
-
--- Ultra mode button
-local ultraBtn = Instance.new("TextButton")
-ultraBtn.Size = UDim2.new(0.48, 0, 0, 25)
-ultraBtn.Position = UDim2.new(0.52, 0, 0, 75)
-ultraBtn.BackgroundColor3 = Color3.fromRGB(255, 100, 50)
-ultraBtn.Text = "ULTRA"
-ultraBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-ultraBtn.TextSize = 11
-ultraBtn.Font = Enum.Font.GothamBold
-ultraBtn.BorderSizePixel = 0
-ultraBtn.Parent = contentFrame
-
-local ultraCorner = Instance.new("UICorner")
-ultraCorner.CornerRadius = UDim.new(0, 4)
-ultraCorner.Parent = ultraBtn
+-- Tombol utama (satu baris per tombol)
+local optimizeBtn = createButton("⚡ OPTIMIZE", 50)
+local ultraBtn = createButton("ULTRA", 95)
+local resetBtn = createButton("RESET", 140)
 
 -- Info text
 local infoText = Instance.new("TextLabel")
