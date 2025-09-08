@@ -377,6 +377,22 @@ local function optimizePerformance()
     optimizeBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
 end
 
+-- Fungsi untuk bikin player lain jadi abu-abu polos
+local function simplifyCharacter(plr, char)
+    if plr == player then return end -- biar kamu sendiri normal
+    if not char then return end
+
+    for _, obj in pairs(char:GetDescendants()) do
+        if obj:IsA("BasePart") then
+            obj.Color = Color3.fromRGB(150, 150, 150)
+            obj.Material = Enum.Material.SmoothPlastic
+            obj.CastShadow = false
+        elseif obj:IsA("Decal") or obj:IsA("Texture") then
+            obj.Transparency = 1
+        end
+    end
+end
+
 -- Ultra performance mode for extreme FPS boost
 local function ultraOptimize()
     if isUltraMode then return end
@@ -386,15 +402,15 @@ local function ultraOptimize()
 
     if not isOptimized then
         optimizePerformance()
-        wait(0.5)
+        task.wait(0.5)
     end
 
     -- Ultra lighting (Maximum performance)
     Lighting.GlobalShadows = false
-    Lighting.Technology = Enum.Technology.Legacy -- Fastest rendering
-    Lighting.FogEnd = 1000000 -- No fog at all
+    Lighting.Technology = Enum.Technology.Legacy
+    Lighting.FogEnd = 1000000
     Lighting.FogStart = 1000000
-    Lighting.Brightness = 5 -- Very bright
+    Lighting.Brightness = 5
     Lighting.Ambient = Color3.fromRGB(178, 178, 178)
     Lighting.OutdoorAmbient = Color3.fromRGB(178, 178, 178)
     Lighting.ColorShift_Bottom = Color3.fromRGB(255, 255, 255)
@@ -412,35 +428,32 @@ local function ultraOptimize()
     -- Ultra part optimization
     for _, obj in pairs(optimizedParts) do
         if obj and obj.Parent then
-            -- Convert everything to basic plastic
             obj.Material = Enum.Material.Plastic
             obj.Reflectance = 0
             obj.CastShadow = false
 
-            -- Remove all surface details
             if obj:FindFirstChild("SurfaceGui") then
                 obj.SurfaceGui:Destroy()
             end
         end
     end
 
-    -- Hapus rumput (Terrain Decoration)
+    -- Hapus rumput
     if Workspace:FindFirstChild("Terrain") then
         Workspace.Terrain.Decoration = false
     end
 
-    -- Disable all effects and lighting
+    -- Disable efek
     for _, obj in pairs(Workspace:GetDescendants()) do
-        if obj:IsA("ParticleEmitter") or
-           obj:IsA("Fire") or
-           obj:IsA("Smoke") or
-           obj:IsA("Sparkles") or
-           obj:IsA("PointLight") or
-           obj:IsA("SpotLight") or
-           obj:IsA("SurfaceLight") then
+        if obj:IsA("ParticleEmitter")
+        or obj:IsA("Fire")
+        or obj:IsA("Smoke")
+        or obj:IsA("Sparkles")
+        or obj:IsA("PointLight")
+        or obj:IsA("SpotLight")
+        or obj:IsA("SurfaceLight") then
             obj.Enabled = false
         elseif obj:IsA("Atmosphere") then
-            -- Completely remove atmospheric effects
             obj.Density = 0
             obj.Offset = 0
             obj.Glare = 0
@@ -448,48 +461,35 @@ local function ultraOptimize()
         elseif obj:IsA("Clouds") then
             obj.Enabled = false
             obj.Density = 0
-        elseif obj:IsA("BloomEffect") or obj:IsA("BlurEffect") or obj:IsA("ColorCorrectionEffect") then
+        elseif obj:IsA("BloomEffect")
+        or obj:IsA("BlurEffect")
+        or obj:IsA("ColorCorrectionEffect") then
             obj.Enabled = false
         elseif obj:IsA("Sound") and obj.IsPlaying then
             obj.Volume = obj.Volume * 0.5
         end
     end
 
-    -- Ultra player simplification (hanya untuk player lain, bukan kamu)
+    -- Ultra player simplification
     for _, plr in pairs(Players:GetPlayers()) do
-        if plr ~= player and plr.Character then
-            for _, obj in pairs(plr.Character:GetDescendants()) do
-                if obj:IsA("BasePart") then
-                    obj.Color = Color3.fromRGB(150, 150, 150) -- abu-abu polos
-                    obj.Material = Enum.Material.SmoothPlastic
-                    obj.CastShadow = false
-                elseif obj:IsA("Decal") or obj:IsA("Texture") then
-                    obj.Transparency = 1 -- hapus wajah/texture
-                end
-            end
-        end
+        simplifyCharacter(plr, plr.Character)
+        plr.CharacterAdded:Connect(function(char)
+            task.wait(1)
+            simplifyCharacter(plr, char)
+        end)
     end
 
-    -- Pastikan kalau ada player baru spawn juga langsung polos
     Players.PlayerAdded:Connect(function(plr)
         plr.CharacterAdded:Connect(function(char)
             task.wait(1)
-            for _, obj in pairs(char:GetDescendants()) do
-                if obj:IsA("BasePart") then
-                    obj.Color = Color3.fromRGB(150, 150, 150)
-                    obj.Material = Enum.Material.SmoothPlastic
-                    obj.CastShadow = false
-                elseif obj:IsA("Decal") or obj:IsA("Texture") then
-                    obj.Transparency = 1
-                end
-            end
+            simplifyCharacter(plr, char)
         end)
     end)
 
-    -- Multiple garbage collections
+    -- Garbage collection
     for i = 1, 3 do
         collectgarbage("collect")
-        wait(0.1)
+        task.wait(0.1)
     end
 
     isUltraMode = true
