@@ -4,9 +4,9 @@
 -- Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
 local Lighting = game:GetService("Lighting")
 local Workspace = game:GetService("Workspace")
-local TweenService = game:GetService("TweenService")
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
@@ -17,21 +17,29 @@ screenGui.Name = "NEBULA_HUB"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = playerGui
 
--- Main frame
+-- Background fullscreen
+local background = Instance.new("Frame")
+background.Size = UDim2.new(1,0,1,0)
+background.Position = UDim2.new(0,0,0,0)
+background.BackgroundColor3 = Color3.fromRGB(25,25,30)
+background.BorderSizePixel = 0
+background.Parent = screenGui
+
+-- MainFrame
 local mainFrame = Instance.new("Frame")
 mainFrame.Size = UDim2.new(0.35,0,0.45,0)
 mainFrame.Position = UDim2.new(0.325,0,0.275,0)
-mainFrame.BackgroundColor3 = Color3.fromRGB(30,30,40)
+mainFrame.BackgroundColor3 = Color3.fromRGB(35,35,45)
 mainFrame.BorderSizePixel = 0
 mainFrame.Active = true
 mainFrame.Draggable = true
-mainFrame.Parent = screenGui
+mainFrame.Parent = background
 
 local mainCorner = Instance.new("UICorner")
 mainCorner.CornerRadius = UDim.new(0,12)
 mainCorner.Parent = mainFrame
 
--- Title bar
+-- Title Bar
 local titleBar = Instance.new("Frame")
 titleBar.Size = UDim2.new(1,0,0,35)
 titleBar.BackgroundColor3 = Color3.fromRGB(22,22,30)
@@ -74,7 +82,7 @@ end
 local minimizeBtn = createTitleButton("−",-70,Color3.fromRGB(255,200,50))
 local closeBtn = createTitleButton("×",-35,Color3.fromRGB(255,80,80))
 
--- Content frame
+-- Content Frame
 local contentFrame = Instance.new("Frame")
 contentFrame.Size = UDim2.new(1,-20,1,-45)
 contentFrame.Position = UDim2.new(0,10,0,40)
@@ -86,7 +94,7 @@ local contentCorner = Instance.new("UICorner")
 contentCorner.CornerRadius = UDim.new(0,10)
 contentCorner.Parent = contentFrame
 
--- Info label
+-- Info Label
 local infoLabel = Instance.new("TextLabel")
 infoLabel.Size = UDim2.new(1,0,0,50)
 infoLabel.Position = UDim2.new(0,0,0,0)
@@ -99,7 +107,7 @@ infoLabel.TextWrapped = true
 infoLabel.TextYAlignment = Enum.TextYAlignment.Top
 infoLabel.Parent = contentFrame
 
--- FPS & status
+-- FPS & Status
 local fpsLabel = Instance.new("TextLabel")
 fpsLabel.Size = UDim2.new(0.5,0,0,20)
 fpsLabel.Position = UDim2.new(0,10,0,55)
@@ -122,7 +130,7 @@ statusLabel.Font = Enum.Font.Gotham
 statusLabel.TextXAlignment = Enum.TextXAlignment.Right
 statusLabel.Parent = contentFrame
 
--- Tombol helper
+-- Button Helper
 local function createButton(text, yPos)
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(0.9,0,0,40)
@@ -146,7 +154,7 @@ local optimizeBtn = createButton("⚡ Optimize", 90)
 local ultraBtn = createButton("🚀 Ultra Mode", 145)
 local resetBtn = createButton("🔄 Reset", 200)
 
--- Hover effect
+-- Hover Effect
 local function addHover(button)
     button.MouseEnter:Connect(function()
         TweenService:Create(button,TweenInfo.new(0.2),{BackgroundTransparency=0.05}):Play()
@@ -160,7 +168,7 @@ for _,btn in pairs({optimizeBtn,ultraBtn,resetBtn,closeBtn,minimizeBtn}) do
     addHover(btn)
 end
 
--- FPS counter
+-- FPS Counter
 local fps = 0
 local lastTime = tick()
 local frameCount = 0
@@ -205,7 +213,7 @@ closeBtn.MouseButton1Click:Connect(function()
     screenGui:Destroy()
 end)
 
-print("✅ NEBULA CLIENT GUI siap digunakan! Desain modern dan rapi.")
+print("✅ NEBULA CLIENT GUI siap digunakan! Modern & responsif.")
 
 -- Save original settings (More comprehensive)
 local function saveOriginalSettings()
