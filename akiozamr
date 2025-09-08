@@ -4,7 +4,7 @@
 -- Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local TweenService = game:GetService("TweenService")
+local Lighting = game:GetService("Lighting")
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
@@ -12,122 +12,146 @@ local playerGui = player:WaitForChild("PlayerGui")
 -- ScreenGui
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "NEBULA_HUB"
-screenGui.ResetOnSpawn = false
 screenGui.Parent = playerGui
+screenGui.ResetOnSpawn = false
 
--- Main Frame (box style)
+-- Main Frame
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0,300,0,220)
-mainFrame.Position = UDim2.new(0.5,-150,0.5,-110)
-mainFrame.BackgroundColor3 = Color3.fromRGB(35,35,45)
-mainFrame.BorderColor3 = Color3.fromRGB(180,180,180)
-mainFrame.BorderSizePixel = 2
+mainFrame.Name = "MainFrame"
+mainFrame.Size = UDim2.new(0, 250, 0, 180)
+mainFrame.Position = UDim2.new(0.5, -125, 0.5, -90)
+mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+mainFrame.BorderSizePixel = 0
+mainFrame.Active = true
+mainFrame.Draggable = true
 mainFrame.Parent = screenGui
 
 local mainCorner = Instance.new("UICorner")
-mainCorner.CornerRadius = UDim.new(0,10)
+mainCorner.CornerRadius = UDim.new(0, 6)
 mainCorner.Parent = mainFrame
 
 -- Title Bar
-local titleBar = Instance.new("TextLabel")
-titleBar.Size = UDim2.new(1,0,0,40)
-titleBar.Position = UDim2.new(0,0,0,0)
-titleBar.BackgroundColor3 = Color3.fromRGB(25,25,35)
+local titleBar = Instance.new("Frame")
+titleBar.Size = UDim2.new(1, 0, 0, 25)
+titleBar.Position = UDim2.new(0, 0, 0, 0)
+titleBar.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
 titleBar.BorderSizePixel = 0
-titleBar.Text = "💫 Nebula Client | Beta"
-titleBar.TextColor3 = Color3.fromRGB(150,200,255)
-titleBar.Font = Enum.Font.GothamBold
-titleBar.TextSize = 16
-titleBar.TextXAlignment = Enum.TextXAlignment.Center
 titleBar.Parent = mainFrame
+
+local titleCorner = Instance.new("UICorner")
+titleCorner.CornerRadius = UDim.new(0, 6)
+titleCorner.Parent = titleBar
+
+local titleText = Instance.new("TextLabel")
+titleText.Size = UDim2.new(1, -10, 1, 0)
+titleText.Position = UDim2.new(0, 5, 0, 0)
+titleText.BackgroundTransparency = 1
+titleText.Text = "💫 Nebula Client | Beta"
+titleText.TextColor3 = Color3.fromRGB(100, 200, 255)
+titleText.TextSize = 12
+titleText.Font = Enum.Font.GothamBold
+titleText.TextXAlignment = Enum.TextXAlignment.Left
+titleText.Parent = titleBar
 
 -- FPS Label
 local fpsLabel = Instance.new("TextLabel")
-fpsLabel.Size = UDim2.new(1,0,0,25)
-fpsLabel.Position = UDim2.new(0,0,0,50)
+fpsLabel.Size = UDim2.new(1, -10, 0, 20)
+fpsLabel.Position = UDim2.new(0, 5, 0, 30)
 fpsLabel.BackgroundTransparency = 1
 fpsLabel.Text = "FPS: --"
-fpsLabel.TextColor3 = Color3.fromRGB(100,255,100)
+fpsLabel.TextColor3 = Color3.fromRGB(100, 255, 100)
+fpsLabel.TextSize = 12
 fpsLabel.Font = Enum.Font.GothamBold
-fpsLabel.TextSize = 14
-fpsLabel.TextXAlignment = Enum.TextXAlignment.Center
+fpsLabel.TextXAlignment = Enum.TextXAlignment.Left
 fpsLabel.Parent = mainFrame
 
--- Function to create button
-local function createButton(text,posY)
+-- Status Label
+local statusLabel = Instance.new("TextLabel")
+statusLabel.Size = UDim2.new(1, -10, 0, 15)
+statusLabel.Position = UDim2.new(0, 5, 0, 50)
+statusLabel.BackgroundTransparency = 1
+statusLabel.Text = "Ready"
+statusLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+statusLabel.TextSize = 10
+statusLabel.Font = Enum.Font.Gotham
+statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+statusLabel.Parent = mainFrame
+
+-- Buttons background (Frame untuk menampung semua tombol)
+local buttonFrame = Instance.new("Frame")
+buttonFrame.Size = UDim2.new(1, -10, 0, 90)
+buttonFrame.Position = UDim2.new(0, 5, 0, 70)
+buttonFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+buttonFrame.BorderSizePixel = 0
+buttonFrame.Parent = mainFrame
+
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0, 6)
+buttonCorner.Parent = buttonFrame
+
+-- Tombol
+local buttonNames = {"PERFORMANCE", "ULTRA", "RESET"}
+local buttonColors = {Color3.fromRGB(50,150,250), Color3.fromRGB(255,100,50), Color3.fromRGB(150,50,50)}
+local buttons = {}
+
+for i, name in ipairs(buttonNames) do
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0.8,0,0,40)
-    btn.Position = UDim2.new(0.1,0,0,posY)
-    btn.BackgroundColor3 = Color3.fromRGB(120,120,130)
-    btn.BorderColor3 = Color3.fromRGB(180,180,180)
-    btn.BorderSizePixel = 2
-    btn.Text = text
-    btn.TextColor3 = Color3.fromRGB(240,240,240)
+    btn.Size = UDim2.new(1, -10, 0, 25)
+    btn.Position = UDim2.new(0, 5, 0, 5 + (i-1)*30)
+    btn.BackgroundColor3 = buttonColors[i]
+    btn.Text = name
+    btn.TextColor3 = Color3.fromRGB(255,255,255)
     btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 14
+    btn.TextSize = 12
+    btn.BorderSizePixel = 0
+    btn.Parent = buttonFrame
+    
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0,6)
+    corner.CornerRadius = UDim.new(0,4)
     corner.Parent = btn
-    btn.Parent = mainFrame
-    return btn
+    
+    buttons[name] = btn
 end
 
--- Buttons
-local btnPerformance = createButton("PERFORMANCE", 85)
-local btnUltra = createButton("ULTRA", 135)
-local btnReset = createButton("RESET", 185)
+-- Contoh fungsi tombol
+buttons["PERFORMANCE"].MouseButton1Click:Connect(function()
+    statusLabel.Text = "Mode: PERFORMANCE"
+end)
 
--- Hover Effect
-local function addHover(button)
-    button.MouseEnter:Connect(function()
-        TweenService:Create(button,TweenInfo.new(0.2),{BackgroundColor3=Color3.fromRGB(150,150,160)}):Play()
-    end)
-    button.MouseLeave:Connect(function()
-        TweenService:Create(button,TweenInfo.new(0.2),{BackgroundColor3=Color3.fromRGB(120,120,130)}):Play()
-    end)
-end
+buttons["ULTRA"].MouseButton1Click:Connect(function()
+    statusLabel.Text = "Mode: ULTRA"
+end)
 
-for _,btn in pairs({btnPerformance,btnUltra,btnReset}) do
-    addHover(btn)
-end
+buttons["RESET"].MouseButton1Click:Connect(function()
+    statusLabel.Text = "Mode: RESET"
+end)
 
--- FPS Counter Update
+-- FPS Counter (update)
 local fps = 0
 local lastTime = tick()
 local frameCount = 0
 
 RunService.Heartbeat:Connect(function()
     frameCount = frameCount + 1
-    local current = tick()
-    if current - lastTime >= 0.5 then
-        fps = frameCount / (current-lastTime)
+    local currentTime = tick()
+    if currentTime - lastTime >= 0.5 then
+        fps = frameCount / (currentTime - lastTime)
         frameCount = 0
-        lastTime = current
-        fpsLabel.Text = string.format("FPS: %.0f",fps)
-        if fps>=50 then
-            fpsLabel.TextColor3 = Color3.fromRGB(100,255,100)
-        elseif fps>=30 then
-            fpsLabel.TextColor3 = Color3.fromRGB(255,255,100)
+        lastTime = currentTime
+
+        local fpsColor
+        if fps >= 50 then
+            fpsColor = Color3.fromRGB(100, 255, 100)
+        elseif fps >= 30 then
+            fpsColor = Color3.fromRGB(255, 255, 100)
         else
-            fpsLabel.TextColor3 = Color3.fromRGB(255,100,100)
+            fpsColor = Color3.fromRGB(255, 100, 100)
         end
+
+        fpsLabel.Text = string.format("FPS: %.0f", fps)
+        fpsLabel.TextColor3 = fpsColor
     end
 end)
-
--- Button functions
-btnPerformance.MouseButton1Click:Connect(function()
-    optimizePerformance()
-end)
-
-btnUltra.MouseButton1Click:Connect(function()
-    ultraOptimize()
-end)
-
-btnReset.MouseButton1Click:Connect(function()
-    resetSettings()
-end)
-
-print("✅ NEBULA CLIENT GUI siap! Layout box siap digunakan.")
 
 -- Save original settings (More comprehensive)
 local function saveOriginalSettings()
