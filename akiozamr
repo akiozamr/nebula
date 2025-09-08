@@ -1,102 +1,85 @@
 -- NEBULA CLIENT Anti-Lag Optimizer v2.1 (Fixed & Enhanced)
 -- Advanced optimization with proper FPS boost and no fog/bright sky
 
+-- Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local Lighting = game:GetService("Lighting")
-local Workspace = game:GetService("Workspace")
-local StarterGui = game:GetService("StarterGui")
-local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
--- Create main GUI (Compact Size)
+-- Main GUI
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "NEBULA_CLIENT"
 screenGui.Parent = playerGui
 screenGui.ResetOnSpawn = false
 
--- Main frame (Much smaller)
+-- Main Frame
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 300, 0, 200)
-mainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+mainFrame.Size = UDim2.new(0, 300, 0, 220)
+mainFrame.Position = UDim2.new(0.5, -150, 0.5, -110)
 mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
 mainFrame.BorderSizePixel = 0
 mainFrame.Active = true
 mainFrame.Draggable = true
 mainFrame.Parent = screenGui
 
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 6)
-corner.Parent = mainFrame
+local mainCorner = Instance.new("UICorner")
+mainCorner.CornerRadius = UDim.new(0, 8)
+mainCorner.Parent = mainFrame
 
--- Title bar (Smaller)
+-- Title Bar
 local titleBar = Instance.new("Frame")
-titleBar.Name = "TitleBar"
-titleBar.Size = UDim2.new(1, 0, 0, 25)
-titleBar.Position = UDim2.new(0, 0, 0, 0)
+titleBar.Size = UDim2.new(1, 0, 0, 28)
 titleBar.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
 titleBar.BorderSizePixel = 0
 titleBar.Parent = mainFrame
 
 local titleCorner = Instance.new("UICorner")
-titleCorner.CornerRadius = UDim.new(0, 6)
+titleCorner.CornerRadius = UDim.new(0, 8)
 titleCorner.Parent = titleBar
 
--- Title text (Smaller)
 local titleText = Instance.new("TextLabel")
 titleText.Size = UDim2.new(1, -50, 1, 0)
-titleText.Position = UDim2.new(0, 5, 0, 0)
+titleText.Position = UDim2.new(0, 10, 0, 0)
 titleText.BackgroundTransparency = 1
 titleText.Text = "💫 NEBULA | AKIOZAMR v2.1"
 titleText.TextColor3 = Color3.fromRGB(100, 200, 255)
-titleText.TextSize = 12
+titleText.TextSize = 13
 titleText.Font = Enum.Font.GothamBold
+titleText.TextXAlignment = Enum.TextXAlignment.Left
 titleText.Parent = titleBar
 
--- Minimize button
-local minimizeBtn = Instance.new("TextButton")
-minimizeBtn.Size = UDim2.new(0, 20, 0, 20)
-minimizeBtn.Position = UDim2.new(1, -44, 0, 2.5)
-minimizeBtn.BackgroundColor3 = Color3.fromRGB(255, 200, 50)
-minimizeBtn.Text = "−"
-minimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-minimizeBtn.TextSize = 14
-minimizeBtn.Font = Enum.Font.GothamBold
-minimizeBtn.BorderSizePixel = 0
-minimizeBtn.Parent = titleBar
+-- Control Buttons
+local function createButton(parent, posX, color, symbol)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 22, 0, 22)
+    btn.Position = UDim2.new(1, posX, 0, 3)
+    btn.BackgroundColor3 = color
+    btn.Text = symbol
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.TextSize = 14
+    btn.Font = Enum.Font.GothamBold
+    btn.BorderSizePixel = 0
+    btn.Parent = parent
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 4)
+    corner.Parent = btn
+    return btn
+end
 
-local minimizeCorner = Instance.new("UICorner")
-minimizeCorner.CornerRadius = UDim.new(0, 3)
-minimizeCorner.Parent = minimizeBtn
+local minimizeBtn = createButton(titleBar, -46, Color3.fromRGB(255, 200, 50), "−")
+local closeBtn = createButton(titleBar, -22, Color3.fromRGB(255, 80, 80), "×")
 
--- Close button (Smaller)
-local closeBtn = Instance.new("TextButton")
-closeBtn.Size = UDim2.new(0, 20, 0, 20)
-closeBtn.Position = UDim2.new(1, -22, 0, 2.5)
-closeBtn.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
-closeBtn.Text = "×"
-closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-closeBtn.TextSize = 14
-closeBtn.Font = Enum.Font.GothamBold
-closeBtn.BorderSizePixel = 0
-closeBtn.Parent = titleBar
-
-local closeCorner = Instance.new("UICorner")
-closeCorner.CornerRadius = UDim.new(0, 3)
-closeCorner.Parent = closeBtn
-
--- Content frame
+-- Content Frame
 local contentFrame = Instance.new("Frame")
-contentFrame.Size = UDim2.new(1, -10, 1, -35)
+contentFrame.Size = UDim2.new(1, -10, 1, -38)
 contentFrame.Position = UDim2.new(0, 5, 0, 30)
 contentFrame.BackgroundTransparency = 1
 contentFrame.Parent = mainFrame
 
--- FPS Counter
+-- FPS Label
 local fpsLabel = Instance.new("TextLabel")
 fpsLabel.Size = UDim2.new(0.5, -5, 0, 20)
 fpsLabel.Position = UDim2.new(0, 0, 0, 0)
@@ -108,21 +91,21 @@ fpsLabel.Font = Enum.Font.GothamBold
 fpsLabel.TextXAlignment = Enum.TextXAlignment.Left
 fpsLabel.Parent = contentFrame
 
--- Status label
+-- Status Label
 local statusLabel = Instance.new("TextLabel")
 statusLabel.Size = UDim2.new(0.5, -5, 0, 20)
 statusLabel.Position = UDim2.new(0.5, 5, 0, 0)
 statusLabel.BackgroundTransparency = 1
 statusLabel.Text = "Ready"
-statusLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
-statusLabel.TextSize = 10
+statusLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+statusLabel.TextSize = 11
 statusLabel.Font = Enum.Font.Gotham
 statusLabel.TextXAlignment = Enum.TextXAlignment.Right
 statusLabel.Parent = contentFrame
 
--- Optimize button
+-- Optimize Button
 local optimizeBtn = Instance.new("TextButton")
-optimizeBtn.Size = UDim2.new(1, 0, 0, 35)
+optimizeBtn.Size = UDim2.new(1, 0, 0, 36)
 optimizeBtn.Position = UDim2.new(0, 0, 0, 30)
 optimizeBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 250)
 optimizeBtn.Text = "⚡ OPTIMIZE"
@@ -133,49 +116,17 @@ optimizeBtn.BorderSizePixel = 0
 optimizeBtn.Parent = contentFrame
 
 local optimizeCorner = Instance.new("UICorner")
-optimizeCorner.CornerRadius = UDim.new(0, 4)
+optimizeCorner.CornerRadius = UDim.new(0, 5)
 optimizeCorner.Parent = optimizeBtn
 
--- Reset button
-local resetBtn = Instance.new("TextButton")
-resetBtn.Size = UDim2.new(0.48, 0, 0, 25)
-resetBtn.Position = UDim2.new(0, 0, 0, 75)
-resetBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
-resetBtn.Text = "RESET"
-resetBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-resetBtn.TextSize = 11
-resetBtn.Font = Enum.Font.Gotham
-resetBtn.BorderSizePixel = 0
-resetBtn.Parent = contentFrame
-
-local resetCorner = Instance.new("UICorner")
-resetCorner.CornerRadius = UDim.new(0, 4)
-resetCorner.Parent = resetBtn
-
--- Ultra mode button
-local ultraBtn = Instance.new("TextButton")
-ultraBtn.Size = UDim2.new(0.48, 0, 0, 25)
-ultraBtn.Position = UDim2.new(0.52, 0, 0, 75)
-ultraBtn.BackgroundColor3 = Color3.fromRGB(255, 100, 50)
-ultraBtn.Text = "ULTRA"
-ultraBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-ultraBtn.TextSize = 11
-ultraBtn.Font = Enum.Font.GothamBold
-ultraBtn.BorderSizePixel = 0
-ultraBtn.Parent = contentFrame
-
-local ultraCorner = Instance.new("UICorner")
-ultraCorner.CornerRadius = UDim.new(0, 4)
-ultraCorner.Parent = ultraBtn
-
--- Info text
+-- Info Text
 local infoText = Instance.new("TextLabel")
 infoText.Size = UDim2.new(1, 0, 0, 60)
-infoText.Position = UDim2.new(0, 0, 0, 105)
+infoText.Position = UDim2.new(0, 0, 0, 75)
 infoText.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
 infoText.Text = "Nebula Hub | Beta Tester"
 infoText.TextColor3 = Color3.fromRGB(180, 180, 180)
-infoText.TextSize = 9
+infoText.TextSize = 10
 infoText.Font = Enum.Font.Gotham
 infoText.TextXAlignment = Enum.TextXAlignment.Left
 infoText.TextYAlignment = Enum.TextYAlignment.Top
@@ -183,51 +134,31 @@ infoText.BorderSizePixel = 0
 infoText.Parent = contentFrame
 
 local infoCorner = Instance.new("UICorner")
-infoCorner.CornerRadius = UDim.new(0, 4)
+infoCorner.CornerRadius = UDim.new(0, 5)
 infoCorner.Parent = infoText
 
--- Add padding to info text
 local infoPadding = Instance.new("UIPadding")
-infoPadding.PaddingLeft = UDim.new(0, 5)
-infoPadding.PaddingTop = UDim.new(0, 3)
+infoPadding.PaddingLeft = UDim.new(0, 6)
+infoPadding.PaddingTop = UDim.new(0, 4)
 infoPadding.Parent = infoText
 
--- Variables
-local isOptimized = false
-local isUltraMode = false
-local originalSettings = {}
-local fpsConnection
-local optimizedParts = {}
-local isMinimized = false
-
--- FPS Counter (More accurate)
+-- FPS Counter Logic
 local fps = 0
 local lastTime = tick()
 local frameCount = 0
 
-local function updateFPS()
+RunService.Heartbeat:Connect(function()
     frameCount = frameCount + 1
     local currentTime = tick()
-    if currentTime - lastTime >= 0.5 then -- Update twice per second for better accuracy
+    if currentTime - lastTime >= 0.5 then
         fps = frameCount / (currentTime - lastTime)
         frameCount = 0
         lastTime = currentTime
-        
-        local fpsColor
-        if fps >= 50 then
-            fpsColor = Color3.fromRGB(100, 255, 100)
-        elseif fps >= 30 then
-            fpsColor = Color3.fromRGB(255, 255, 100)
-        else
-            fpsColor = Color3.fromRGB(255, 100, 100)
-        end
-        
-        fpsLabel.Text = string.format("FPS: %.0f", fps)
-        fpsLabel.TextColor3 = fpsColor
-    end
-end
 
-fpsConnection = RunService.Heartbeat:Connect(updateFPS)
+        fpsLabel.Text = string.format("FPS: %.0f", fps)
+        fpsLabel.TextColor3 = (fps >= 50 and Color3.fromRGB(100,255,100)) or (fps >= 30 and Color3.fromRGB(255,255,100)) or Color3.fromRGB(255,100,100)
+    end
+end)
 
 -- Save original settings (More comprehensive)
 local function saveOriginalSettings()
