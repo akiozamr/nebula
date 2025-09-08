@@ -19,9 +19,9 @@ screenGui.Parent = playerGui
 
 -- Main frame
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0.35,0,0.35,0)
-mainFrame.Position = UDim2.new(0.325,0,0.325,0)
-mainFrame.BackgroundColor3 = Color3.fromRGB(28,28,38)
+mainFrame.Size = UDim2.new(0.35,0,0.45,0)
+mainFrame.Position = UDim2.new(0.325,0,0.275,0)
+mainFrame.BackgroundColor3 = Color3.fromRGB(60,60,60) -- background abu-abu penuh
 mainFrame.BorderSizePixel = 0
 mainFrame.Active = true
 mainFrame.Draggable = true
@@ -34,7 +34,7 @@ mainCorner.Parent = mainFrame
 -- Title bar
 local titleBar = Instance.new("Frame")
 titleBar.Size = UDim2.new(1,0,0,30)
-titleBar.BackgroundColor3 = Color3.fromRGB(18,18,28)
+titleBar.BackgroundColor3 = Color3.fromRGB(45,45,45)
 titleBar.BorderSizePixel = 0
 titleBar.Parent = mainFrame
 
@@ -78,7 +78,8 @@ local closeBtn = createTitleButton("×",-25,Color3.fromRGB(255,80,80))
 local contentFrame = Instance.new("Frame")
 contentFrame.Size = UDim2.new(1,-20,1,-40)
 contentFrame.Position = UDim2.new(0,10,0,35)
-contentFrame.BackgroundTransparency = 1
+contentFrame.BackgroundColor3 = Color3.fromRGB(100,100,100) -- abu-abu terang
+contentFrame.BackgroundTransparency = 0.3
 contentFrame.Parent = mainFrame
 
 -- FPS & Status
@@ -98,19 +99,19 @@ statusLabel.Size = UDim2.new(1,0,0,20)
 statusLabel.Position = UDim2.new(0,0,0,20)
 statusLabel.BackgroundTransparency = 1
 statusLabel.Text = "Ready"
-statusLabel.TextColor3 = Color3.fromRGB(180,180,180)
+statusLabel.TextColor3 = Color3.fromRGB(230,230,230)
 statusLabel.TextSize = 12
 statusLabel.Font = Enum.Font.Gotham
 statusLabel.TextXAlignment = Enum.TextXAlignment.Left
 statusLabel.Parent = contentFrame
 
--- Fungsi tombol abu-abu transparan dengan outline
+-- Tombol abu-abu transparan dengan outline
 local function createButton(text,yScale)
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0.9,0,0,35)
-    btn.Position = UDim2.new(0.05,0,0, yScale)
+    btn.Size = UDim2.new(0.9,0,0,40)
+    btn.Position = UDim2.new(0.05,0,0,yScale)
     btn.BackgroundColor3 = Color3.fromRGB(128,128,128)
-    btn.BackgroundTransparency = 0.4
+    btn.BackgroundTransparency = 0.3
     btn.BorderColor3 = Color3.fromRGB(180,180,180)
     btn.BorderSizePixel = 2
     btn.Text = text
@@ -124,19 +125,18 @@ local function createButton(text,yScale)
     return btn
 end
 
--- Tombol utama (satu baris per tombol)
+-- Tombol utama
 local optimizeBtn = createButton("⚡ OPTIMIZE", 50)
-local ultraBtn = createButton("ULTRA", 95)
-local resetBtn = createButton("RESET", 140)
+local ultraBtn = createButton("ULTRA", 100)
+local resetBtn = createButton("RESET", 150)
 
 -- Hover effect
 local function addHover(button)
-    local normal = button.BackgroundColor3
     button.MouseEnter:Connect(function()
         TweenService:Create(button,TweenInfo.new(0.2),{BackgroundTransparency=0.1}):Play()
     end)
     button.MouseLeave:Connect(function()
-        TweenService:Create(button,TweenInfo.new(0.2),{BackgroundTransparency=0.4}):Play()
+        TweenService:Create(button,TweenInfo.new(0.2),{BackgroundTransparency=0.3}):Play()
     end)
 end
 addHover(optimizeBtn)
@@ -171,34 +171,15 @@ local originalSettings = {}
 local optimizedParts = {}
 local isMinimized = false
 
--- Fungsi tombol (gunakan fungsi lama)
-optimizeBtn.MouseButton1Click:Connect(function()
-    if not isOptimized then
-        statusLabel.Text = "Optimizing..."
-        statusLabel.TextColor3 = Color3.fromRGB(255,200,100)
-        -- panggil fungsi optimizePerformance() asli
-        optimizePerformance()
-    end
-end)
-
-ultraBtn.MouseButton1Click:Connect(function()
-    if not isUltraMode then
-        statusLabel.Text = "Ultra Mode..."
-        statusLabel.TextColor3 = Color3.fromRGB(255,150,50)
-        ultraOptimize()
-    end
-end)
-
-resetBtn.MouseButton1Click:Connect(function()
-    statusLabel.Text = "Resetting..."
-    statusLabel.TextColor3 = Color3.fromRGB(255,200,100)
-    resetSettings()
-end)
+-- Tombol fungsi
+optimizeBtn.MouseButton1Click:Connect(optimizePerformance)
+ultraBtn.MouseButton1Click:Connect(ultraOptimize)
+resetBtn.MouseButton1Click:Connect(resetSettings)
 
 -- Minimize button
 minimizeBtn.MouseButton1Click:Connect(function()
     if isMinimized then
-        mainFrame:TweenSize(UDim2.new(0.35,0,0.35,0),"Out","Quart",0.3,true)
+        mainFrame:TweenSize(UDim2.new(0.35,0,0.45,0),"Out","Quart",0.3,true)
         contentFrame.Visible = true
         minimizeBtn.Text = "−"
         isMinimized = false
