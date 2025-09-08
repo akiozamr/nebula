@@ -15,130 +15,81 @@ screenGui.Name = "NEBULA_HUB"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = playerGui
 
--- Background GUI
-local background = Instance.new("Frame")
-background.Size = UDim2.new(0,300,0,180)
-background.Position = UDim2.new(0.5,-150,0.5,-90)
-background.BackgroundColor3 = Color3.fromRGB(35,35,45)
-background.BorderColor3 = Color3.fromRGB(120,120,120)
-background.BorderSizePixel = 2
-background.Parent = screenGui
+-- Main Frame (box style)
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0,300,0,220)
+mainFrame.Position = UDim2.new(0.5,-150,0.5,-110)
+mainFrame.BackgroundColor3 = Color3.fromRGB(35,35,45)
+mainFrame.BorderColor3 = Color3.fromRGB(180,180,180)
+mainFrame.BorderSizePixel = 2
+mainFrame.Parent = screenGui
 
-local bgCorner = Instance.new("UICorner")
-bgCorner.CornerRadius = UDim.new(0,10)
-bgCorner.Parent = background
+local mainCorner = Instance.new("UICorner")
+mainCorner.CornerRadius = UDim.new(0,10)
+mainCorner.Parent = mainFrame
 
--- Title
-local titleText = Instance.new("TextLabel")
-titleText.Size = UDim2.new(1,0,0,30)
-titleText.Position = UDim2.new(0,0,0,0)
-titleText.BackgroundTransparency = 1
-titleText.Text = "🌌 NEBULA CLIENT"
-titleText.TextColor3 = Color3.fromRGB(180,220,255)
-titleText.Font = Enum.Font.GothamBold
-titleText.TextSize = 16
-titleText.Parent = background
+-- Title Bar
+local titleBar = Instance.new("TextLabel")
+titleBar.Size = UDim2.new(1,0,0,40)
+titleBar.Position = UDim2.new(0,0,0,0)
+titleBar.BackgroundColor3 = Color3.fromRGB(25,25,35)
+titleBar.BorderSizePixel = 0
+titleBar.Text = "💫 Nebula Client | Beta"
+titleBar.TextColor3 = Color3.fromRGB(150,200,255)
+titleBar.Font = Enum.Font.GothamBold
+titleBar.TextSize = 16
+titleBar.TextXAlignment = Enum.TextXAlignment.Center
+titleBar.Parent = mainFrame
 
 -- FPS Label
 local fpsLabel = Instance.new("TextLabel")
-fpsLabel.Size = UDim2.new(1,0,0,20)
-fpsLabel.Position = UDim2.new(0,0,0,35)
+fpsLabel.Size = UDim2.new(1,0,0,25)
+fpsLabel.Position = UDim2.new(0,0,0,50)
 fpsLabel.BackgroundTransparency = 1
 fpsLabel.Text = "FPS: --"
 fpsLabel.TextColor3 = Color3.fromRGB(100,255,100)
 fpsLabel.Font = Enum.Font.GothamBold
 fpsLabel.TextSize = 14
-fpsLabel.Parent = background
+fpsLabel.TextXAlignment = Enum.TextXAlignment.Center
+fpsLabel.Parent = mainFrame
 
--- Dropdown frame
-local dropdownFrame = Instance.new("Frame")
-dropdownFrame.Size = UDim2.new(0.8,0,0,35)
-dropdownFrame.Position = UDim2.new(0.1,0,0,65)
-dropdownFrame.BackgroundColor3 = Color3.fromRGB(50,50,60)
-dropdownFrame.BorderColor3 = Color3.fromRGB(180,180,180)
-dropdownFrame.BorderSizePixel = 2
-dropdownFrame.Parent = background
-
-local ddCorner = Instance.new("UICorner")
-ddCorner.CornerRadius = UDim.new(0,6)
-ddCorner.Parent = dropdownFrame
-
-local selectedText = Instance.new("TextLabel")
-selectedText.Size = UDim2.new(1,0,1,0)
-selectedText.BackgroundTransparency = 1
-selectedText.Text = "Select..."
-selectedText.TextColor3 = Color3.fromRGB(240,240,240)
-selectedText.Font = Enum.Font.Gotham
-selectedText.TextSize = 14
-selectedText.TextXAlignment = Enum.TextXAlignment.Left
-selectedText.TextYAlignment = Enum.TextYAlignment.Center
-selectedText.Parent = dropdownFrame
-
--- Options frame
-local optionsFrame = Instance.new("Frame")
-optionsFrame.Size = UDim2.new(1,0,0,0)
-optionsFrame.Position = UDim2.new(0,0,1,0)
-optionsFrame.BackgroundColor3 = Color3.fromRGB(40,40,50)
-optionsFrame.BorderSizePixel = 0
-optionsFrame.ClipsDescendants = true
-optionsFrame.Parent = dropdownFrame
-
-local optionsCorner = Instance.new("UICorner")
-optionsCorner.CornerRadius = UDim.new(0,6)
-optionsCorner.Parent = optionsFrame
-
--- Options
-local optionNames = {"Performance","Ultra","Reset"}
-
-local function createOption(name,idx)
-    local option = Instance.new("TextButton")
-    option.Size = UDim2.new(1,0,0,30)
-    option.Position = UDim2.new(0,0,0,(idx-1)*30)
-    option.BackgroundColor3 = Color3.fromRGB(60,60,70)
-    option.BorderSizePixel = 0
-    option.Text = name
-    option.TextColor3 = Color3.fromRGB(240,240,240)
-    option.Font = Enum.Font.Gotham
-    option.TextSize = 14
-    option.Parent = optionsFrame
-
+-- Function to create button
+local function createButton(text,posY)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0.8,0,0,40)
+    btn.Position = UDim2.new(0.1,0,0,posY)
+    btn.BackgroundColor3 = Color3.fromRGB(120,120,130)
+    btn.BorderColor3 = Color3.fromRGB(180,180,180)
+    btn.BorderSizePixel = 2
+    btn.Text = text
+    btn.TextColor3 = Color3.fromRGB(240,240,240)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 14
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0,4)
-    corner.Parent = option
+    corner.CornerRadius = UDim.new(0,6)
+    corner.Parent = btn
+    btn.Parent = mainFrame
+    return btn
+end
 
-    option.MouseEnter:Connect(function()
-        option.BackgroundColor3 = Color3.fromRGB(80,80,90)
+-- Buttons
+local btnPerformance = createButton("PERFORMANCE", 85)
+local btnUltra = createButton("ULTRA", 135)
+local btnReset = createButton("RESET", 185)
+
+-- Hover Effect
+local function addHover(button)
+    button.MouseEnter:Connect(function()
+        TweenService:Create(button,TweenInfo.new(0.2),{BackgroundColor3=Color3.fromRGB(150,150,160)}):Play()
     end)
-    option.MouseLeave:Connect(function()
-        option.BackgroundColor3 = Color3.fromRGB(60,60,70)
-    end)
-
-    option.MouseButton1Click:Connect(function()
-        selectedText.Text = name
-        optionsFrame:TweenSize(UDim2.new(1,0,0,0),"Out","Quart",0.2,true)
-
-        if name=="Performance" then
-            optimizePerformance()
-        elseif name=="Ultra" then
-            ultraOptimize()
-        elseif name=="Reset" then
-            resetSettings()
-        end
+    button.MouseLeave:Connect(function()
+        TweenService:Create(button,TweenInfo.new(0.2),{BackgroundColor3=Color3.fromRGB(120,120,130)}):Play()
     end)
 end
 
-for i,name in ipairs(optionNames) do
-    createOption(name,i)
+for _,btn in pairs({btnPerformance,btnUltra,btnReset}) do
+    addHover(btn)
 end
-
--- Toggle dropdown
-dropdownFrame.MouseButton1Click:Connect(function()
-    if optionsFrame.Size.Y.Offset == 0 then
-        optionsFrame:TweenSize(UDim2.new(1,0,0,#optionNames*30),"Out","Quart",0.2,true)
-    else
-        optionsFrame:TweenSize(UDim2.new(1,0,0,0),"Out","Quart",0.2,true)
-    end
-end)
 
 -- FPS Counter Update
 local fps = 0
@@ -149,15 +100,34 @@ RunService.Heartbeat:Connect(function()
     frameCount = frameCount + 1
     local current = tick()
     if current - lastTime >= 0.5 then
-        fps = frameCount/(current-lastTime)
+        fps = frameCount / (current-lastTime)
         frameCount = 0
         lastTime = current
         fpsLabel.Text = string.format("FPS: %.0f",fps)
-        if fps>=50 then fpsLabel.TextColor3 = Color3.fromRGB(100,255,100)
-        elseif fps>=30 then fpsLabel.TextColor3 = Color3.fromRGB(255,255,100)
-        else fpsLabel.TextColor3 = Color3.fromRGB(255,100,100) end
+        if fps>=50 then
+            fpsLabel.TextColor3 = Color3.fromRGB(100,255,100)
+        elseif fps>=30 then
+            fpsLabel.TextColor3 = Color3.fromRGB(255,255,100)
+        else
+            fpsLabel.TextColor3 = Color3.fromRGB(255,100,100)
+        end
     end
 end)
+
+-- Button functions
+btnPerformance.MouseButton1Click:Connect(function()
+    optimizePerformance()
+end)
+
+btnUltra.MouseButton1Click:Connect(function()
+    ultraOptimize()
+end)
+
+btnReset.MouseButton1Click:Connect(function()
+    resetSettings()
+end)
+
+print("✅ NEBULA CLIENT GUI siap! Layout box siap digunakan.")
 
 -- Save original settings (More comprehensive)
 local function saveOriginalSettings()
